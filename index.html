@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>d4_c12</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,800;1,900&display=swap');
+
+    :root {
+      --deep: #020c24;
+      --blue: #1b8cff;
+      --cyan: #5ce1ff;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      height: 100vh;
+      overflow: hidden;
+      background: #040711;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: var(--white);
+    }
+
+    .bg-img {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: left center;
+      filter: url(#ripple);
+      animation: floatBg 10s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes floatBg {
+      to { transform: scale(1.03) translate(-10px, -8px); }
+    }
+
+    .right-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 18vw;
+      min-width: 210px;
+      height: 100vh;
+      background: var(--deep);
+      z-index: 1;
+    }
+
+    .clock {
+      position: fixed;
+      top: 26px;
+      right: 36px;
+      z-index: 10;
+      text-align: right;
+      font-style: italic;
+    }
+
+    .date { font-size: 1.9rem; font-weight: 900; line-height: 1; }
+    .date span { color: var(--cyan); font-size: 1.2rem; margin-left: 6px; }
+
+    .time {
+      display: inline-block;
+      margin-top: 7px;
+      padding: 4px 14px;
+      background: var(--white);
+      color: var(--deep);
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      transform: skewX(-14deg);
+      box-shadow: 4px 4px 0 var(--blue);
+    }
+
+    .login-box {
+      position: relative;
+      z-index: 10;
+      width: 440px;
+      max-width: 90vw;
+      margin-right: 16vw;
+    }
+
+    .header { margin-bottom: 26px; transform: skewX(-12deg); }
+    .header h1 { font-size: 2.9rem; font-weight: 900; font-style: italic; line-height: 0.95; }
+    .header span {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 16px;
+      background: var(--cyan);
+      color: var(--deep);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+    }
+
+    .field { margin-bottom: 18px; transform: skewX(-14deg); transition: transform 0.2s; }
+    .field:focus-within { transform: skewX(-14deg) translateX(12px); }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      padding-left: 6px;
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 2px solid rgba(92, 225, 255, 0.5);
+      border-left: 8px solid var(--cyan);
+      color: var(--white);
+      font: italic 800 1.05rem 'Montserrat', sans-serif;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input::placeholder { color: rgba(255, 255, 255, 0.38); }
+    input:focus {
+      background: var(--white);
+      color: var(--deep);
+      border-color: var(--white);
+      border-left-color: var(--blue);
+      box-shadow: 10px 10px 0 var(--cyan);
+    }
+    input:focus::placeholder { color: rgba(2, 12, 36, 0.45); }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 16px 26px;
+      background: var(--white);
+      color: var(--deep);
+      border: none;
+      font: italic 900 1.2rem 'Montserrat', sans-serif;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transform: skewX(-14deg);
+      box-shadow: 10px 10px 0 var(--blue);
+      display: flex;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: var(--cyan);
+      transform: skewX(-14deg) translateX(12px);
+      box-shadow: 12px 12px 0 var(--white);
+    }
+
+    @media (max-width: 768px) {
+      body { justify-content: center; }
+      .right-panel { width: 100vw; min-width: 0; opacity: 0.9; }
+      .login-box { margin-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="ripple">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.02" numOctaves="2" result="n">
+        <animate attributeName="baseFrequency" dur="8s" values="0.01 0.02;0.016 0.03;0.01 0.02" repeatCount="indefinite" />
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="7" />
+    </filter>
+  </svg>
+
+  <img class="bg-img" src="download.jpg" alt="" />
+  <div class="right-panel"></div>
+
+  <div class="clock">
+    <div class="date" id="d">--/-- <span>---</span></div>
+    <div class="time" id="t">--:--:--</div>
+  </div>
+
+  <div class="login-box">
+    <div class="header">
+      <h1>d4_c12</h1>
+      <span>THE O W N E R</span>
+    </div>
+
+    <form onsubmit="event.preventDefault(); alert('Welcome back.');">
+      <div class="field">
+        <label for="u">Email</label>
+        <input type="text" id="u" placeholder="Email required" required />
+      </div>
+      <div class="field">
+        <label for="p">PASSCODE</label>
+        <input type="password" id="p" placeholder="••••••••" required />
+      </div>
+      <button type="submit"><span>CONFIRM</span><span>&#9654;</span></button>
+    </form>
+  </div>
+
+  <script>
+    const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const tick = () => {
+      const n = new Date(), p = v => String(v).padStart(2, "0");
+      d.innerHTML = `${p(n.getMonth() + 1)}/${p(n.getDate())} <span>${days[n.getDay()]}</span>`;
+      t.textContent = `${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+    };
+    tick();
+    setInterval(tick, 1000);
+  </script>
+
+</body>
+</html>
